@@ -39,7 +39,7 @@ class Integration(unittest.TestCase):
         self.work.mkdir()
         self.save = self.root/'saved/touch4-ios7/11D257'
         self.save.mkdir(parents=True)
-        shutil.copy2(PROJECT/'artifacts/touch4-ios7-11D257-v1.tar.gz', self.save/'repairs-v1.tar.gz')
+        shutil.copy2(PROJECT/'artifacts/touch4-ios7-11D257-v2.tar.gz', self.save/'repairs-v2.tar.gz')
         self.common = ('source '+shlex.quote(str(HELPER))+'\n'+
             'error() { echo "$*" >&2; exit 97; }; log() { :; };\n'+
             'file_download() { echo "Unexpected network request" >&2; exit 98; };\n'+
@@ -71,10 +71,10 @@ class Integration(unittest.TestCase):
         self.assertEqual(p.returncode,0,p.stderr)
 
     def test_corrupt_bundle_fails(self):
-        (self.save/'repairs-v1.tar.gz').write_bytes(b'bad')
+        (self.save/'repairs-v2.tar.gz').write_bytes(b'bad')
         p=run(self.common+'file_download() { printf bad > "$2"; }; touch4_ios7_resources',self.work)
         self.assertEqual(p.returncode,97)
-        self.assertFalse((self.save/'repairs-v1/kernel.patch').exists())
+        self.assertFalse((self.save/'repairs-v2/kernel.patch').exists())
 
     def test_kernel_roundtrip_and_idempotence(self):
         fixed=self.fixed_cache();before=fixed.read_bytes()

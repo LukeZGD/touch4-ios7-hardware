@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-05",
+  "kit_base_release": "Latest-v26.10.12",
+  "kit_base_commit": "66b137aae91d77b96b14e7052189f824351ce887",
+  "host_integration_tests": {
+    "default_shell_cases": 8,
+    "motion_native_hfs_cases": 3,
+    "result": "passed"
+  },
+  "motion_builder_reproducibility": "Exact full-reboot-tested signed module and daemon reproduced",
+  "binary_patch_roundtrip": "Exact tested output; daemon __text and entitlements unchanged",
+  "hfs_shell_overlay": {
+    "backboardd_BTServer_module_readback": "passed",
+    "backboardd_module_mode_owner": "0755, root:wheel",
+    "stock_backboardd_launch_configuration": "unchanged"
+  },
+  "hardware_validation": {
+    "device": "8 GB iPod4,1 / N81AP",
+    "persistent_system_path_install": "passed",
+    "full_OS_reboot": "passed",
+    "Safari_left_right_landscape_and_portrait": "passed",
+    "rotation_lock": "passed",
+    "lock_unlock_then_rotation": "passed",
+    "fresh_full_restore_using_v2_bundle": "pending",
+    "separate_power_off_power_on": "not tested"
+  },
+  "optional_cydia_disabled_hardware_test": "pending",
+  "system_sound_effects": "unresolved",
+  "wallpaper_gallery": "unresolved; default wallpaper only",
+  "app_independent_CoreMotion": "not fixed by backboardd-only module"
+}

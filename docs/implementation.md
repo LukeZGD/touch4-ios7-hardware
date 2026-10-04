@@ -37,6 +37,37 @@ Changing only the master/slave bit to `0x10` in v6 eliminated the reported
 hiss on both wired channels and the speaker. That is an isolated hardware
 result; it does not validate every rate, capture path, or startup sequence.
 
+### Rotation
+
+11D257 CoreMotion classifies N81 as model 0. HID already supplies real sensor
+events, but the high-level backend initializes without usable acceleration or
+device-orientation samples. Setting this process's writable model cache to the
+iOS 6 N81 enum 11 before backend initialization restores acceleration, gyro,
+fusion and orientation callbacks. Loading later does not repair the cached
+backend, even after manager objects are recreated.
+
+The module constructor checks iPod4,1/N81AP, ARM Mach-O32, CoreMotion UUID
+`f541183564873c8489cce9deca3e9bd5` and the original getter instructions. It
+calculates the runtime slide from the loaded image, only changes the writable
+model slot when both getter and slot report 0, and leaves model 11 unchanged.
+Unknown versions or other recognized models are rejected. The original getter
+code and the system shared-cache file are untouched.
+
+The signed backboardd binary receives one `LC_LOAD_DYLIB` dependency on
+`/usr/lib/libtouch4motion.dylib`, using verified zero-filled header padding.
+Its complete 239732-byte `__text` and entitlement dictionary remain unchanged.
+The binary patch includes its resulting ad hoc signature. The original
+launchd configuration, boot chain and audio kernel remain unchanged by this
+additional repair. The existing Aquila runtime is still needed.
+
+On an 8 GB N81, early loading restored Safari landscape in both directions,
+return to portrait, rotation lock and rotation after lock/unlock. The same
+signed module and patched daemon were then installed at their final system
+paths, a full OS reboot completed, and all those physical tests passed again.
+This result covers system orientation through backboardd; independent app
+CoreMotion processes are not fixed. A fresh full restore using the v2 Kit
+bundle and a separate power-off/power-on cycle remain untested.
+
 ### Wallpaper
 
 Create `/Library/Wallpaper/iPod` links with `~ipod` names pointing at existing
@@ -48,23 +79,23 @@ resource repair, not a complete gallery fix.
 ## Verification
 
 ```sh
-python3 tests/test_kit_integration.py --kit /path/to/Legacy-iOS-Kit
-bash -n restore.sh
-# Optional, after generating the candidate; requires Unicorn 2.1.4:
-python3 tools/test_bridge.py \
-  saved/touch4-ios7/11D257/hardware/kernel.n81.macho
+python3 tests/test_kit_integration.py --kit /path/to/Legacy-iOS-Kit \
+  --kernelcache inputs/kernelcache
+python3 tests/test_motion_integration.py --kit /path/to/Legacy-iOS-Kit \
+  --rootfs inputs/rootfs.dec.dmg
+bash -n /path/to/Legacy-iOS-Kit/restore.sh
 ```
 
-Offline validation reproduced the original v6 linked kernel and the v7
-kernel-only output exactly. The latter raw kernel is
-`c082f2b423e04aa60a71840c573557d9564d70542f45468de6c60fc2159ff0a8`;
-with the tested Kit template its Img3 is
-`b473817cb826a8aad426dfc3b1d9b45335921f6c699b054dee04b794aba8e434`.
-Assembly source compilation reproduces all 132 bridge bytes. All six
-regular overlay files match HFS readback; every wallpaper link target exists.
-BTServer permissions and MobileGestalt ownership were checked. Five host
-integration tests cover input rejection, opt-in filenames, supported-device
-scope and original/experimental Just Boot selection, plus enabling the repair in the normal restore menu, with no USB operations.
+The host tests exercise the Kit's actual shell helper with native `bspatch`,
+`xpwntool` and `hfsplus`: kernel round trip/idempotence, supported device scope,
+resource corruption, IPSW version invalidation and cache recovery, Just Boot,
+backboardd binary reproduction, entitlements and unchanged executable code,
+real HFS readback/permissions, and rejection of an unsupported daemon before
+rootfs writes. No test accesses USB or restores a device.
 
-
-Music playback is verified; charging, locking and keyboard sound effects remain unresolved. The new default integration is host-tested, with a fresh real-device restore pending.
+The v2 raw kernel remains
+`c082f2b423e04aa60a71840c573557d9564d70542f45468de6c60fc2159ff0a8`.
+The module and daemon match the full-reboot-tested outputs listed in
+`artifacts/manifest.json`. Bluetooth/music hardware results and the remaining
+system-sound and wallpaper-gallery limitations are unchanged. The integrated
+v2 bundle still needs a fresh full device restore.

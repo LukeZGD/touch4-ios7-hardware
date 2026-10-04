@@ -4,8 +4,11 @@ Original repair scripts, symbol maps and bridge source are provided under
 GPL-3.0-or-later; see LICENSE. Work originated in the Legacy iOS Kit hardware
 repair PR and is maintained here separately from the Kit restore interface.
 
+The N81 motion module source and compiled module are also GPL-3.0-or-later.
+
 The AppleCS42L59Audio donor and its Info.plist are extracted Apple binaries,
-not GPL source. The Bluetooth HCD was extracted from the public iPod4,1
+not GPL source. The backboardd patch transforms the public iPhone3,3 11D257 daemon. The
+Bluetooth HCD was extracted from the public iPod4,1
 10B500 BlueTool. Binary patches transform the hash-pinned Apple inputs and
 contain portions of the corresponding binaries. Those components retain
 their original ownership and are not relicensed by the source license.

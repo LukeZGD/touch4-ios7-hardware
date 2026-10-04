@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "version": "cs59-v1",
+  "version": "cs59-motion-v2",
   "device": "iPod4,1",
   "target": "11D257",
   "base": "10B500",
@@ -14,6 +14,11 @@
       "sha1": "2248a64e807e5c233c71843adbc0a43826d6bd46",
       "sha256": "2adcc0b16dc5f976c6ba80907bd6e1dba1ec395fbcc40c905dc4a543e4053c6e",
       "size": 1597424
+    },
+    "backboardd": {
+      "sha1": "86e4e86f587e2caa85bebaf9d5e6970b53a36a18",
+      "sha256": "dbbdeb114ef589bab6a28c553245726a3c5d694c16091012f3a92c4b769dddee",
+      "size": 445200
     }
   },
   "outputs": {
@@ -26,6 +31,16 @@
       "sha1": "9a3b693bf0368a128f624da105d17209cee63056",
       "sha256": "e19ad8e77ed50d6f1447fd00ac7f1954d2bf75c6045612f73d3a52329709c8c9",
       "size": 1611184
+    },
+    "backboardd": {
+      "sha1": "d4674d1f94a44692bd8c8e7bcb5010aad9593818",
+      "sha256": "9b0e0e717cc810a5e79ee61810253ff07fb919db44c1423182d8a4f710771568",
+      "size": 449616
+    },
+    "libtouch4motion.dylib": {
+      "sha1": "c1403f8422ac24f9cff94a7482ebae11387e5551",
+      "sha256": "37672509e886f3ab4523939d79a63d3f16f3550bf6655b97858c4e53406bea3c",
+      "size": 50704
     }
   },
   "files": {
@@ -39,16 +54,39 @@
       "sha256": "5d4e58c249ae44a232f2a77e1a64159f910c43c466fb23abb07eef559c96ce6b",
       "size": 23894
     },
+    "backboardd.patch": {
+      "sha1": "84eb00fbe857071ea9fe26ac79bf1a7fb555fce3",
+      "sha256": "86fbc40e8c0608fb3cafaca6a92f2a6f7bb9587249b8ec62f6b0d8e50068e245",
+      "size": 8338
+    },
     "rootfs.tar": {
-      "sha1": "09d2aa8e374257c1d701b8cf68d95258399614d4",
-      "sha256": "6ba59fe2458e1fd9b1781da2a4d4122dac775163d97d0b8ad0f5648689b64f12",
-      "size": 71680
+      "sha1": "2e2133db366b5c9fe3a26125aed7a955c977f722",
+      "sha256": "09e1fe39a66939a338587093c609d071b67f5794a594754a965b91728ece28ea",
+      "size": 122880
     }
   },
   "limitations": [
     "System sound effects unresolved",
     "Settings wallpaper gallery unresolved",
-    "Rotation unresolved"
+    "App-specific CoreMotion is not repaired by the backboardd-only module",
+    "Fresh full restore with the v2 bundle pending"
   ],
-  "device_tree": "Original Legacy iOS Kit N81 tree; bootloaders/DRA unchanged"
+  "device_tree": "Original Legacy iOS Kit N81 tree; bootloaders/DRA unchanged",
+  "motion": {
+    "install_name": "/usr/lib/libtouch4motion.dylib",
+    "scope": "backboardd process only",
+    "coremotion_uuid": "f541183564873c8489cce9deca3e9bd5",
+    "model": 11,
+    "shared_cache_modified": false,
+    "additional_kernel_changes": false,
+    "launch_configuration_modified": false,
+    "hardware_validation": {
+      "device": "8 GB iPod4,1 / N81AP",
+      "full_reboot": "passed",
+      "safari_both_landscape_and_portrait": "passed",
+      "rotation_lock": "passed",
+      "lock_unlock_then_rotation": "passed",
+      "fresh_v2_full_restore": "pending"
+    }
+  }
 }
