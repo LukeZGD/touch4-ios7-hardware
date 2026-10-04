@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-04",
+  "kind": "default shell/binary integration refactor",
+  "kit_base": "33dcbfcf4d8791268292e1009e2955e3f02b4785",
+  "host_integration_tests": {
+    "result": "passed",
+    "cases": 8
+  },
+  "binary_patch_roundtrip": {
+    "kernel": "c082f2b423e04aa60a71840c573557d9564d70542f45468de6c60fc2159ff0a8",
+    "signed_btserver": "e19ad8e77ed50d6f1447fd00ac7f1954d2bf75c6045612f73d3a52329709c8c9",
+    "result": "matches earlier tested outputs byte-for-byte"
+  },
+  "hfs_shell_overlay": {
+    "hfs_rootfs_shell": "passed",
+    "overlay_regular_files": 5,
+    "wallpaper_targets": 67,
+    "btserver_entitlements": "preserved"
+  },
+  "shell_syntax": "passed",
+  "new_full_device_restore": "pending",
+  "optional_cydia_disabled_hardware_test": "pending",
+  "system_sound_effects": "unresolved",
+  "wallpaper_gallery": "unresolved; default wallpaper only",
+  "rotation": "unresolved; excluded"
+}
