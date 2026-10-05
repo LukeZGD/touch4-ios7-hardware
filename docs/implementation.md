@@ -65,8 +65,9 @@ return to portrait, rotation lock and rotation after lock/unlock. The same
 signed module and patched daemon were then installed at their final system
 paths, a full OS reboot completed, and all those physical tests passed again.
 This result covers system orientation through backboardd; independent app
-CoreMotion processes are not fixed. A fresh full restore using the v2 Kit
-bundle and a separate power-off/power-on cycle remain untested.
+CoreMotion processes are not fixed. The device owner subsequently completed
+a fresh full restore through the normal v2 Kit flow and reported no problems.
+A separate power-off/power-on cycle remains untested.
 
 ### Wallpaper
 
@@ -97,5 +98,5 @@ The v2 raw kernel remains
 `c082f2b423e04aa60a71840c573557d9564d70542f45468de6c60fc2159ff0a8`.
 The module and daemon match the full-reboot-tested outputs listed in
 `artifacts/manifest.json`. Bluetooth/music hardware results and the remaining
-system-sound and wallpaper-gallery limitations are unchanged. The integrated
-v2 bundle still needs a fresh full device restore.
+system-sound and wallpaper-gallery limitations are unchanged. A fresh
+full restore with the integrated v2 bundle subsequently passed (user-reported).

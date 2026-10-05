@@ -21,11 +21,13 @@
     "Safari_left_right_landscape_and_portrait": "passed",
     "rotation_lock": "passed",
     "lock_unlock_then_rotation": "passed",
-    "fresh_full_restore_using_v2_bundle": "pending",
+    "fresh_full_restore_using_v2_bundle": "passed; user reported no problems after fresh restore through the normal Kit flow",
     "separate_power_off_power_on": "not tested"
   },
   "optional_cydia_disabled_hardware_test": "pending",
   "system_sound_effects": "unresolved",
   "wallpaper_gallery": "unresolved; default wallpaper only",
-  "app_independent_CoreMotion": "not fixed by backboardd-only module"
+  "app_independent_CoreMotion": "not fixed by backboardd-only module",
+  "tested_fork_commit": "234d54a040fe98f20679419638a1de6ec275ab83",
+  "tested_bundle_revision": "89c213c48737059647184ebed9a5dfe32928ff78"
 }

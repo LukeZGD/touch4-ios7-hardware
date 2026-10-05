@@ -19,7 +19,8 @@ integrated restore test. **Charging, lock and keyboard system sound effects
 remain unresolved.** Safari rotation in both directions, return to portrait, rotation lock, and lock/unlock were verified after a full OS reboot on the 8 GB N81 device. This backboardd-only fix does not repair every application's independent CoreMotion use. Repeated cold boots, Bluetooth
 sleep/wake, capture paths, additional sample rates and other capacities still
 need testing. The default shell/binary-patch integration is a refactor of the
-tested outputs; a new full device restore is still required.
+tested outputs. A fresh full restore through the normal Kit flow was completed
+and the device owner reported no problems.
 
 ## Downloadable inputs and artifacts
 
@@ -82,6 +83,9 @@ The packager requires the exact already-tested signed BTServer output. Use
 Procursus ldid v2.1.5-procursus7, as in the original build, to reproduce it.
 Verify each output checksum; the generated kernel must match
 `c082f2b423e04aa60a71840c573557d9564d70542f45468de6c60fc2159ff0a8`.
+
+The bundle manifest records validation at build time. Subsequent full-restore
+results are recorded in [tests/validation-motion.json](tests/validation-motion.json).
 
 See [implementation details](docs/implementation.md) and [license notices](NOTICE.md).
 
