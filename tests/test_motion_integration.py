@@ -34,7 +34,7 @@ class MotionIntegration(unittest.TestCase):
         self.work.mkdir()
         self.save = self.root / 'saved/touch4-ios7/11D257'
         self.save.mkdir(parents=True)
-        shutil.copyfile(PROJECT / 'artifacts/touch4-ios7-11D257-v3.tar.gz', self.save / 'repairs-v3.tar.gz')
+        shutil.copyfile(PROJECT / 'artifacts/touch4-ios7-11D257-v4.tar.gz', self.save / 'repairs-v4.tar.gz')
         self.manifest = json.loads((PROJECT / 'artifacts/manifest.json').read_text())
         self.helper = KIT / 'resources/patch/touch4-ios7/repairs.sh'
         self.hfs = KIT / 'bin/macos/hfsplus'
@@ -85,6 +85,18 @@ class MotionIntegration(unittest.TestCase):
             result = self.extract(image, path, self.root / key)
             self.assertEqual(sha(result), self.manifest['outputs'][key]['sha256'])
         self.assertEqual(self.extract(image, launch_path, self.root / 'launch-after'), original_launch)
+        # Read the UI repairs from the actual HFS output, including tar ownership.
+        import io
+        import tarfile
+        with tarfile.open(fileobj=io.BytesIO((PROJECT / 'artifacts/rootfs.tar').read_bytes())) as overlay:
+            for path in ['private/var/mobile/Library/Caches/com.apple.MobileGestalt.plist',
+                         'System/Library/Frameworks/MediaToolbox.framework/N81/SystemSoundRingerSettings.plist']:
+                expected = overlay.extractfile(path).read()
+                self.assertEqual(self.extract(image, path, self.root / Path(path).name), expected)
+                listing = subprocess.check_output([str(self.hfs), str(image), 'ls', str(Path(path).parent)], text=True)
+                line = next(line for line in listing.splitlines() if line.rstrip().endswith(' ' + Path(path).name))
+                owner = '501\\s+501' if 'MobileGestalt' in path else '0\\s+0'
+                self.assertRegex(line, r'^100644\s+' + owner + r'\s+')
         # The helper's actual chmod/chown operations and tar modes are checked
         # by the HFS listing, not merely by searching shell source text.
         for path, basename in [('usr/libexec', 'backboardd'), ('usr/lib', 'libtouch4motion.dylib'),

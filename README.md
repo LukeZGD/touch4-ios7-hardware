@@ -12,24 +12,24 @@ locally supplied audio driver.
 - Native iOS 7 CS42L59 codec transplant and the N81 IIS configuration bridge.
 - System rotation: an early backboardd dependency loads a guarded, process-local CoreMotion model correction.
 - Voice Memos and video recording: a guarded VirtualAudio dependency enables an existing single-microphone routing profile for N81.
-- Partial wallpaper resources: the iOS 7 default wallpaper displays; the Settings gallery remains broken.
+- System sound policy for charging, lock/unlock and keyboard events on hardware without a ringer switch.
+- Static wallpaper resources and a corrected cached capability restore Settings' wallpaper categories and gallery.
 
 Music playback was reported clean on both wired channels and the speaker,
 including playback after lock/unlock. Bluetooth was reported working in the
-integrated restore test. **Charging, lock and keyboard system sound effects
-remain unresolved.** Safari rotation in both directions, return to portrait, rotation lock, and lock/unlock were verified after a full OS reboot on the 8 GB N81 device. This backboardd-only fix does not repair every application's independent CoreMotion use. Repeated cold boots, Bluetooth
+integrated restore test. Charging, lock and keyboard sound effects were confirmed restored with the v4 policy. Safari rotation in both directions, return to portrait, rotation lock, and lock/unlock were verified after a full OS reboot on the 8 GB N81 device. This backboardd-only fix does not repair every application's independent CoreMotion use. Repeated cold boots, Bluetooth
 sleep/wake, broader microphone routes/DSP/gains, additional sample rates and other capacities still
 need testing. The default shell/binary-patch integration is a refactor of the
 tested outputs. A fresh full restore through the normal Kit flow was completed
 and the device owner reported no problems with v2. Voice Memos and video
 recording/playback, and subsequent music playback, were confirmed normal after
 the v3 guarded capture repair was installed. Full device reboot and fresh
-restore with v3 remain untested.
+restore with the capture/UI repairs in v4 remain untested. The owner accepted the wallpaper repair after live installation; native probes confirmed nonzero category frames and 66 static gallery items.
 
 ## Downloadable inputs and artifacts
 
 - [`donors/AppleCS42L59Audio.kext`](donors/AppleCS42L59Audio.kext): the exact native donor and plist used by the offline linker.
-- [`artifacts/touch4-ios7-11D257-v3.tar.gz`](artifacts/touch4-ios7-11D257-v3.tar.gz): ready-to-apply kernel, signed BTServer, signed backboardd and signed VirtualAudio binary patches, plus guarded motion/capture modules and Bluetooth/wallpaper resources.
+- [`artifacts/touch4-ios7-11D257-v4.tar.gz`](artifacts/touch4-ios7-11D257-v4.tar.gz): ready-to-apply kernel, signed BTServer, signed backboardd and signed VirtualAudio binary patches, plus guarded motion/capture modules, Bluetooth resources, N81 system sound policy and static wallpaper gallery configuration.
 - [`artifacts/manifest.json`](artifacts/manifest.json): input/output SHA-1, SHA-256 and sizes.
 - [`artifacts/libtouch4motion.dylib`](artifacts/libtouch4motion.dylib): the exact signed module verified on hardware.
 - [`artifacts/libtouch4audioroute.dylib`](artifacts/libtouch4audioroute.dylib): the exact signed capture-routing module verified on hardware.
@@ -133,3 +133,19 @@ single-microphone database/handlers; it is a compatible borrowed profile, not
 an authentic N81 routing implementation. The existing N81 tunings and codec
 driver are retained. No further kernel, shared-cache, iBoot, DeviceTree or
 launch-configuration changes are introduced by this capture repair.
+
+
+The v4 UI resources extend immutable v3, using the public iPhone3,3 11D257
+`System/Library/Frameworks/MediaToolbox.framework/Default/SystemSoundRingerSettings.plist`:
+
+```sh
+python3 tools/package_ui.py --default-sound-policy inputs/SystemSoundRingerSettings.plist \
+  --output artifacts
+python3 tests/test_ui_resources.py --default-sound-policy inputs/SystemSoundRingerSettings.plist
+```
+
+The packager requires the exact stock policy hash, changes only six event
+policies, and corrects one cached capability byte in the existing public Kit
+N81 template. It never takes a personal device cache or photo database as input.
+All four binary patches and both modules remain byte-identical to v3.
+See [UI validation](tests/validation-ui.json) for the device results and limits.

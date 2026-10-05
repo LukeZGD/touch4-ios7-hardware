@@ -61,7 +61,7 @@ Memos recording/playback, video recording/playback and music playback with the
 guarded outputs. A full device reboot and fresh restore with v3 have not yet
 been tested. The borrowed K93 profile does not establish correctness of all
 microphone routes, gains or DSP modes. Raw device logs and recordings are not
-included in this repository. System sound effects remain unresolved.
+included in this repository. System sound effects are handled separately by the v4 policy below.
 
 ### Rotation
 
@@ -97,11 +97,45 @@ A separate power-off/power-on cycle remains untested.
 
 ### Wallpaper
 
-Create `/Library/Wallpaper/iPod` links with `~ipod` names pointing at existing
-`iPhone` PNGs and thumbnails. There are 67 links and no additional image data.
-The user confirms that only the default iOS 7 wallpaper displays; the stock
-Settings gallery/directory still does not work normally. This is a partial
-resource repair, not a complete gallery fix.
+The existing 67 `/Library/Wallpaper/iPod` links retain `~ipod` names pointing
+at stock iPhone PNGs and thumbnails. The gallery's blank APPLE WALLPAPER section
+was a separate layout failure: MobileGestalt reported procedural wallpapers
+as supported, but this firmware has no procedural wallpaper resources. The
+category layout takes its size from a missing dynamic thumbnail, producing
+zero-sized static buttons and labels.
+
+V4 changes only `CacheData[1856]` from 1 to 0 in the existing Kit N81 template
+(with its Bluetooth correction retained). In 11D257, cached boolean answer
+232 is `UIProceduralWallpaperCapability` (hash `UZyrJHlX635ocWEjBkt9YA`).
+The layout is 248 eight-byte answers followed by 248 validity bytes at 1984;
+the validity byte at 2216 remains 1. Plain/hash CacheExtra overrides are
+ineffective because this answer uses the cached fast path. The underlying
+DeviceTree property's index 117 is not this answer's cache index.
+
+The builder checks the template build, device, board, length and original
+answer/validity before writing. All other data and CacheExtra are preserved.
+No personal device cache, wallpaper database, shared-cache binary or DeviceTree
+is published or patched. Static-only layout produces 90×135 thumbnails and
+nonzero category frames. A native gallery probe enumerated 66 factory items
+and decoded their thumbnails; the owner accepted the resulting wallpaper fix.
+Dynamic wallpapers are not supplied. Full reboot/fresh v4 restore is untested.
+
+### System sound effects
+
+11D257 CoreMedia loads `SystemSoundRingerSettings.plist` under the model-specific
+MediaToolbox directory. The existing N81 directory had the legacy
+`SystemSoundBehaviour.plist` but lacked the newer policy. V4 installs
+`/System/Library/Frameworks/MediaToolbox.framework/N81/SystemSoundRingerSettings.plist`,
+built from the public 11D257 Default policy. For KeyPressed, PINKeyPressed,
+ScreenLocked, ScreenUnlocked, ConnectedToPower and KeyPressClickPreview,
+it selects `RingVibrateIgnore,SilentVibrateIgnore,RingerSwitchIgnore: [Beep]`
+for N81 hardware without a ringer switch. All other Default event policies
+remain unchanged; callers still control lock/keyboard sound preferences.
+
+After live installation and an audio-service restart, the model-specific
+readback succeeded and the owner confirmed system sound effects worked.
+No new audio binary, codec tuning, launch job or boot patch is needed. Broader
+notification/mute behavior and a full reboot/fresh v4 restore remain untested.
 
 ## Verification
 
@@ -120,11 +154,14 @@ backboardd/VirtualAudio binary patches, entitlements and unchanged executable co
 real HFS readback/permissions, and rejection of unsupported binaries before
 rootfs writes. No test accesses USB or restores a device.
 
-The v2/v3 raw kernel remains
+The v2/v3/v4 raw kernel remains
 `c082f2b423e04aa60a71840c573557d9564d70542f45468de6c60fc2159ff0a8`.
 The module and daemon match the full-reboot-tested outputs listed in
-`artifacts/manifest.json`. Bluetooth/music hardware results and the remaining
-system-sound and wallpaper-gallery limitations are unchanged. A fresh
+`artifacts/manifest.json`. Bluetooth/music hardware results are unchanged. The v4 overlay adds the
+system sound policy and static-gallery capability correction described above. A fresh
 full restore with the integrated v2 bundle subsequently passed (user-reported).
 The v3 bundle adds only the capture-routing dependency and module to the
 previous repairs. Its separate validation record is `tests/validation-capture.json`.
+
+V4 reproduction and guarded overlay-delta tests are in `tests/test_ui_resources.py`.
+The actual HFS test reads back both new plists and checks permissions/ownership.

@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "version": "cs59-motion-capture-v3",
+  "version": "cs59-motion-capture-ui-v4",
   "device": "iPod4,1",
   "target": "11D257",
   "base": "10B500",
@@ -24,6 +24,11 @@
       "sha1": "c8881ddf01691aa90b642ff04b5d107608bc86b8",
       "sha256": "e6e200c1cd0be1241e3e5c055c9bbdf065abf36491895e8c32b029a13d33da84",
       "size": 2905104
+    },
+    "Default-SystemSoundRingerSettings.plist": {
+      "sha1": "1419dac55e78729fe099bd8cbc72271cd33b0162",
+      "sha256": "7d5ceb7e563514ec8c451bedf5a48961f7d3600e67207181d77917d614c78930",
+      "size": 4011
     }
   },
   "outputs": {
@@ -56,6 +61,16 @@
       "sha1": "50bd6e56f499b0e9373cb914d9841730fd70319f",
       "sha256": "3126434a585635c23c30bc82ca644b3f29d106d022d4e9e00cca88b3b7a8e738",
       "size": 50672
+    },
+    "N81-SystemSoundRingerSettings.plist": {
+      "sha1": "4b09b7df52c5eb3df18c5e0ec33e52ca38b6b3c0",
+      "sha256": "8f1412dfc3b39d573066949528fc38ee97218251f61712dc358acad967fa1e16",
+      "size": 3359
+    },
+    "MobileGestalt.plist": {
+      "sha1": "8a4fa9f517d839df35dcd4805c392182ebff9e74",
+      "sha256": "4e489408db2c9ab95736a90b08d13619f742e2a8c18a8817a924cb9c68cd4ed1",
+      "size": 3389
     }
   },
   "files": {
@@ -80,17 +95,16 @@
       "size": 38250
     },
     "rootfs.tar": {
-      "sha1": "b82ce76e735e05bf928985af6ee91ab7ca350009",
-      "sha256": "b18e9396ab032ebec2c5c3237e20ed26f7a92d4485fda94533f05c61bd140875",
-      "size": 174080
+      "sha1": "1a1a59790c7f369dcd1d4788769222acd5975acb",
+      "sha256": "659a16fd85e9ebdf948f4ce7eda7c99449748dda8baf37da6650c02e375c05cc",
+      "size": 184320
     }
   },
   "limitations": [
-    "System sound effects unresolved",
-    "Settings wallpaper gallery unresolved",
+    "Dynamic wallpaper assets are not supplied; N81 uses the static gallery layout",
     "App-specific CoreMotion is not repaired by the backboardd-only module",
-    "Capture repair full device reboot and fresh v3 full restore not yet tested",
-    "Broader microphone routes, DSP modes and gain behavior not tested"
+    "Capture/UI repairs full device reboot and fresh v4 full restore not yet tested",
+    "Broader microphone routes, DSP modes, gains and notification/mute behavior not tested"
   ],
   "device_tree": "Original Legacy iOS Kit N81 tree; bootloaders/DRA unchanged",
   "motion": {
@@ -127,6 +141,42 @@
       "music_after_guarded_patch": "passed; user confirmed",
       "full_device_reboot": "not tested",
       "fresh_v3_full_restore": "not tested"
+    }
+  },
+  "ui": {
+    "sound_policy": {
+      "path": "/System/Library/Frameworks/MediaToolbox.framework/N81/SystemSoundRingerSettings.plist",
+      "source": "Public iPhone3,3 11D257 Default policy",
+      "events": [
+        "KeyPressed",
+        "PINKeyPressed",
+        "ScreenLocked",
+        "ScreenUnlocked",
+        "ConnectedToPower",
+        "KeyPressClickPreview"
+      ],
+      "other_default_policies_preserved": true
+    },
+    "wallpaper": {
+      "path": "/private/var/mobile/Library/Caches/com.apple.MobileGestalt.plist",
+      "source": "Existing Kit N81 template with Bluetooth fix",
+      "answer": "UIProceduralWallpaperCapability",
+      "slot": 232,
+      "byte_offset": 1856,
+      "before": 1,
+      "after": 0,
+      "validity_and_other_cached_answers_preserved": true
+    },
+    "additional_binary_or_boot_chain_changes": false,
+    "hardware_validation": {
+      "device": "8 GB iPod4,1 / N81AP",
+      "system_sound_effects": "passed; user confirmed after live config installation",
+      "wallpaper_categories_and_static_gallery": "accepted by user after live cache installation",
+      "category_thumbnail_before": "0x0",
+      "category_thumbnail_after": "90x135",
+      "native_static_gallery_items": 66,
+      "full_device_reboot": "not tested",
+      "fresh_v4_full_restore": "not tested"
     }
   }
 }

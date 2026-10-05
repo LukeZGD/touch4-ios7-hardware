@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-06",
+  "bundle": "touch4-ios7-11D257-v4.tar.gz",
+  "bundle_sha1": "86c32b2d0f668e9cad1fdc225f8716780b1f2ec5",
+  "bundle_sha256": "148fde3238f23fff2d52fadc62c8f3c4028ffaf3293de44d9763d78c9730b4d0",
+  "hardware_validation": {
+    "device": "8 GB iPod4,1 / N81AP",
+    "system_sound_effects": "passed; user confirmed after live config installation",
+    "wallpaper_categories_and_static_gallery": "accepted by user after live cache installation",
+    "category_thumbnail_before": "0x0",
+    "category_thumbnail_after": "90x135",
+    "native_static_gallery_items": 66,
+    "full_device_reboot": "not tested",
+    "fresh_v4_full_restore": "not tested"
+  },
+  "host_tests": {
+    "shell_integration": 8,
+    "native_HFS_integration": 5,
+    "UI_overlay_and_reproduction": 4,
+    "result": "passed"
+  },
+  "unchanged_from_v3": [
+    "kernel.patch",
+    "BTServer.patch",
+    "backboardd.patch",
+    "VirtualAudio.patch",
+    "libtouch4motion.dylib",
+    "libtouch4audioroute.dylib"
+  ],
+  "privacy": "Public Default sound policy and existing Kit gestalt template; no private device cache, photo database, media or raw logs included",
+  "other_capacities_optional_Cydia_disabled_broader_audio_and_cold_boot": "not tested"
+}
