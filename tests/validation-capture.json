@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-05",
+  "kit_base_release": "Latest-v26.10.12",
+  "kit_base_commit": "66b137aae91d77b96b14e7052189f824351ce887",
+  "bundle": "touch4-ios7-11D257-v3.tar.gz",
+  "bundle_sha1": "4045b86169a015927168960833f1aaf3eeb0181f",
+  "builder_reproduction": "Exact signed VirtualAudio and module match the device-tested hashes",
+  "host_integration_tests": {
+    "default_shell_cases": 8,
+    "native_HFS_cases": 5,
+    "result": "passed"
+  },
+  "HFS_validation": {
+    "BTServer_backboardd_VirtualAudio_and_both_modules": "exact manifest hashes after actual shell path",
+    "VirtualAudio_mode_owner": "0775, 0:80 (stock attributes retained)",
+    "routing_module_mode_owner": "0755, 0:0",
+    "backboardd_launch_configuration": "unchanged"
+  },
+  "unsupported_binary_checks": "Unsupported backboardd or VirtualAudio rejected before any HFS writes",
+  "hardware_validation": {
+    "device": "8 GB iPod4,1 / N81AP",
+    "guarded_constructor_status": 1,
+    "AVAudioSession_input_available": true,
+    "voice_memos_record_and_playback": "passed; user confirmed",
+    "video_record_and_playback": "passed; user confirmed",
+    "music_after_guarded_install": "passed; user confirmed",
+    "full_device_reboot_with_capture_repair": "not tested",
+    "fresh_v3_full_restore": "not tested"
+  },
+  "previous_v2_validation": "Full restore and rotation after full OS reboot passed; see validation-motion.json",
+  "capture_scope": "Guarded process-local model cache correction; existing K93 single-microphone profile",
+  "additional_kernel_shared_cache_bootloader_changes": false,
+  "system_sound_effects": "unresolved; user explicitly excluded further repair",
+  "wallpaper_gallery": "unresolved; default wallpaper only",
+  "other_microphone_routes_DSP_gains_and_optional_Cydia_disabled": "not tested"
+}

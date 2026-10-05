@@ -37,6 +37,32 @@ Changing only the master/slave bit to `0x10` in v6 eliminated the reported
 hiss on both wired channels and the speaker. That is an isolated hardware
 result; it does not validate every rate, capture path, or startup sequence.
 
+### Voice Memos and video recording
+
+The CS42L59 input stream exists in the IOAudio2 registry, but VirtualAudio
+classifies the unsupported N81 product as model 0. Voice Memos logs
+`Category cvm is not supported`; Camera fails to initialize its input AudioUnit
+with `nohw`. Selecting VirtualAudio's existing model 16 K93 single-microphone
+routing database and handlers restored both recording paths on the test device.
+
+The guarded module loads through a new `LC_LOAD_DYLIB` dependency on
+`/usr/lib/libtouch4audioroute.dylib`. It requires iPod4,1/N81AP, ARM Mach-O32,
+VirtualAudio UUID `d67d8d297bb836faae231b0b458cbe98`, expected getter bytes at
+`0x15778`, and a writable segment containing the model cache at `0x2adf88`.
+It initializes the getter and changes only an unknown cached model 0 to 16;
+an already-correct 16 is left unchanged. The complete plugin executable code
+and empty entitlements are retained. Existing N81 tuning files and the codec
+driver remain unchanged. This capture repair introduces no additional kernel,
+shared-cache, DeviceTree, bootloader or launch-configuration patches.
+
+After installation and a mediaserverd restart, the constructor returned 1
+and AVAudioSession reported an available microphone. The user confirmed Voice
+Memos recording/playback, video recording/playback and music playback with the
+guarded outputs. A full device reboot and fresh restore with v3 have not yet
+been tested. The borrowed K93 profile does not establish correctness of all
+microphone routes, gains or DSP modes. Raw device logs and recordings are not
+included in this repository. System sound effects remain unresolved.
+
 ### Rotation
 
 11D257 CoreMotion classifies N81 as model 0. HID already supplies real sensor
@@ -90,13 +116,15 @@ bash -n /path/to/Legacy-iOS-Kit/restore.sh
 The host tests exercise the Kit's actual shell helper with native `bspatch`,
 `xpwntool` and `hfsplus`: kernel round trip/idempotence, supported device scope,
 resource corruption, IPSW version invalidation and cache recovery, Just Boot,
-backboardd binary reproduction, entitlements and unchanged executable code,
-real HFS readback/permissions, and rejection of an unsupported daemon before
+backboardd/VirtualAudio binary patches, entitlements and unchanged executable code,
+real HFS readback/permissions, and rejection of unsupported binaries before
 rootfs writes. No test accesses USB or restores a device.
 
-The v2 raw kernel remains
+The v2/v3 raw kernel remains
 `c082f2b423e04aa60a71840c573557d9564d70542f45468de6c60fc2159ff0a8`.
 The module and daemon match the full-reboot-tested outputs listed in
 `artifacts/manifest.json`. Bluetooth/music hardware results and the remaining
 system-sound and wallpaper-gallery limitations are unchanged. A fresh
 full restore with the integrated v2 bundle subsequently passed (user-reported).
+The v3 bundle adds only the capture-routing dependency and module to the
+previous repairs. Its separate validation record is `tests/validation-capture.json`.

@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "version": "cs59-motion-v2",
+  "version": "cs59-motion-capture-v3",
   "device": "iPod4,1",
   "target": "11D257",
   "base": "10B500",
@@ -19,6 +19,11 @@
       "sha1": "86e4e86f587e2caa85bebaf9d5e6970b53a36a18",
       "sha256": "dbbdeb114ef589bab6a28c553245726a3c5d694c16091012f3a92c4b769dddee",
       "size": 445200
+    },
+    "VirtualAudio": {
+      "sha1": "c8881ddf01691aa90b642ff04b5d107608bc86b8",
+      "sha256": "e6e200c1cd0be1241e3e5c055c9bbdf065abf36491895e8c32b029a13d33da84",
+      "size": 2905104
     }
   },
   "outputs": {
@@ -41,6 +46,16 @@
       "sha1": "c1403f8422ac24f9cff94a7482ebae11387e5551",
       "sha256": "37672509e886f3ab4523939d79a63d3f16f3550bf6655b97858c4e53406bea3c",
       "size": 50704
+    },
+    "VirtualAudio": {
+      "sha1": "e0e8173ee4302b6f00f84277c2c147a8ee7aa0aa",
+      "sha256": "f2bb6a5fffc870c318701b83c7be3d5939a1bfbe58be8ecde2010d33d9c8393c",
+      "size": 2928016
+    },
+    "libtouch4audioroute.dylib": {
+      "sha1": "50bd6e56f499b0e9373cb914d9841730fd70319f",
+      "sha256": "3126434a585635c23c30bc82ca644b3f29d106d022d4e9e00cca88b3b7a8e738",
+      "size": 50672
     }
   },
   "files": {
@@ -59,17 +74,23 @@
       "sha256": "86fbc40e8c0608fb3cafaca6a92f2a6f7bb9587249b8ec62f6b0d8e50068e245",
       "size": 8338
     },
+    "VirtualAudio.patch": {
+      "sha1": "f0f018ee2e95144f5d23193f5d2a2e9800b934f6",
+      "sha256": "acf6815192b787f23936d0a5a0b77db7b971449034a22493ceb2b8047acf1db0",
+      "size": 38250
+    },
     "rootfs.tar": {
-      "sha1": "2e2133db366b5c9fe3a26125aed7a955c977f722",
-      "sha256": "09e1fe39a66939a338587093c609d071b67f5794a594754a965b91728ece28ea",
-      "size": 122880
+      "sha1": "b82ce76e735e05bf928985af6ee91ab7ca350009",
+      "sha256": "b18e9396ab032ebec2c5c3237e20ed26f7a92d4485fda94533f05c61bd140875",
+      "size": 174080
     }
   },
   "limitations": [
     "System sound effects unresolved",
     "Settings wallpaper gallery unresolved",
     "App-specific CoreMotion is not repaired by the backboardd-only module",
-    "Fresh full restore with the v2 bundle pending"
+    "Capture repair full device reboot and fresh v3 full restore not yet tested",
+    "Broader microphone routes, DSP modes and gain behavior not tested"
   ],
   "device_tree": "Original Legacy iOS Kit N81 tree; bootloaders/DRA unchanged",
   "motion": {
@@ -86,7 +107,26 @@
       "safari_both_landscape_and_portrait": "passed",
       "rotation_lock": "passed",
       "lock_unlock_then_rotation": "passed",
-      "fresh_v2_full_restore": "pending"
+      "fresh_v2_full_restore": "passed"
+    }
+  },
+  "capture": {
+    "install_name": "/usr/lib/libtouch4audioroute.dylib",
+    "scope": "VirtualAudio plugin process",
+    "virtualaudio_uuid": "d67d8d297bb836faae231b0b458cbe98",
+    "guard": "iPod4,1/N81AP, UUID, getter bytes, writable cache, previous model 0",
+    "model": 16,
+    "profile": "existing K93 single-microphone routing database and handlers",
+    "shared_cache_modified": false,
+    "additional_kernel_changes": false,
+    "launch_configuration_modified": false,
+    "hardware_validation": {
+      "device": "8 GB iPod4,1 / N81AP",
+      "voice_memos_record_and_playback": "passed; user confirmed",
+      "video_record_and_playback": "passed; user confirmed",
+      "music_after_guarded_patch": "passed; user confirmed",
+      "full_device_reboot": "not tested",
+      "fresh_v3_full_restore": "not tested"
     }
   }
 }
